@@ -1,4 +1,4 @@
---// LUXUSWQ V4 MODERN HUB
+--// SYNAPSE X STYLE HUB
 
 local UIS = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
@@ -7,36 +7,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local parent = pcall(function() return gethui() end)
 and gethui() or game.CoreGui
 
-local configFile = "luxuswq.json"
-
--- CONFIG SAVE
-local HttpService = game:GetService("HttpService")
-
-local config = {
-music="",
-volume="1",
-pitch="1"
-}
-
-if isfile and isfile(configFile) then
-config = HttpService:JSONDecode(readfile(configFile))
-end
-
-local function save()
-if writefile then
-writefile(configFile,HttpService:JSONEncode(config))
-end
-end
-
--- REMOTE
+-- remote
 local function getRemote()
 
 local function find(name,p)
-
 local r=p:QueryDescendants(">>RemoteEvent#" .. name)
-
 return r[1]
-
 end
 
 return find("AC6_FE_Sounds",Workspace)
@@ -44,110 +20,134 @@ or find("AC6_FE_Sounds",ReplicatedStorage)
 
 end
 
--- GUI
-local gui=Instance.new("ScreenGui",parent)
+-- gui
+local gui = Instance.new("ScreenGui",parent)
 
--- MAIN
-local main=Instance.new("Frame",gui)
+-- main
+local main = Instance.new("Frame",gui)
 
-main.Size=UDim2.new(0,600,0,350)
-main.Position=UDim2.new(0.5,-300,0.5,-175)
+main.Size = UDim2.new(0,650,0,400)
+main.Position = UDim2.new(0.5,-325,0.5,-200)
 
-main.BackgroundColor3=Color3.fromRGB(255,182,193)
+main.BackgroundColor3 = Color3.fromRGB(30,30,30)
 
 Instance.new("UICorner",main)
 
--- SIDEBAR
-local side=Instance.new("Frame",main)
+-- topbar
+local top = Instance.new("Frame",main)
 
-side.Size=UDim2.new(0,150,1,0)
+top.Size = UDim2.new(1,0,0,40)
 
-side.BackgroundColor3=Color3.fromRGB(255,105,180)
+top.BackgroundColor3 = Color3.fromRGB(20,20,20)
 
-Instance.new("UICorner",side)
+Instance.new("UICorner",top)
 
--- TITLE
-local title=Instance.new("TextLabel",side)
+-- title
+local title = Instance.new("TextLabel",top)
 
-title.Size=UDim2.new(1,0,0,50)
+title.Text = "Synapse X"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
 
-title.Text="LUXUSWQ"
+title.TextColor3 = Color3.fromRGB(0,170,255)
 
-title.Font=Enum.Font.GothamBold
-title.TextSize=22
+title.BackgroundTransparency = 1
+title.Position = UDim2.new(0,10,0,0)
+title.Size = UDim2.new(0,200,1,0)
 
-title.BackgroundTransparency=1
+-- close
+local close = Instance.new("TextButton",top)
 
--- TAB BUTTON
-local musicTab=Instance.new("TextButton",side)
+close.Text = "X"
+close.Font = Enum.Font.GothamBold
 
-musicTab.Size=UDim2.new(1,0,0,40)
-musicTab.Position=UDim2.new(0,0,0,60)
+close.Size = UDim2.new(0,40,1,0)
+close.Position = UDim2.new(1,-40,0,0)
 
-musicTab.Text="Music"
+close.BackgroundTransparency = 1
+close.TextColor3 = Color3.fromRGB(255,80,80)
 
-musicTab.Font=Enum.Font.GothamBold
+-- sidebar
+local side = Instance.new("Frame",main)
 
--- CONTENT
-local content=Instance.new("Frame",main)
+side.Size = UDim2.new(0,150,1,-40)
+side.Position = UDim2.new(0,0,0,40)
 
-content.Size=UDim2.new(1,-160,1,-20)
-content.Position=UDim2.new(0,160,0,10)
+side.BackgroundColor3 = Color3.fromRGB(25,25,25)
 
-content.BackgroundTransparency=1
+-- tab button
+local musicTab = Instance.new("TextButton",side)
 
--- CREATE BOX
-local function box(y,placeholder,value)
+musicTab.Size = UDim2.new(1,0,0,40)
 
-local b=Instance.new("TextBox",content)
+musicTab.Text = "Music"
 
-b.Size=UDim2.new(0.7,0,0,40)
-b.Position=UDim2.new(0.15,0,y,0)
+musicTab.Font = Enum.Font.GothamBold
+musicTab.TextSize = 16
 
-b.PlaceholderText=placeholder
+musicTab.BackgroundTransparency = 1
+musicTab.TextColor3 = Color3.fromRGB(0,170,255)
 
-b.Text=value
+-- content
+local content = Instance.new("Frame",main)
 
-b.Font=Enum.Font.Gotham
+content.Size = UDim2.new(1,-150,1,-40)
+content.Position = UDim2.new(0,150,0,40)
 
-Instance.new("UICorner",b)
+content.BackgroundTransparency = 1
 
-return b
+-- textbox function
+local function createBox(y,text)
+
+local box = Instance.new("TextBox",content)
+
+box.Size = UDim2.new(0.5,0,0,40)
+box.Position = UDim2.new(0.25,0,y,0)
+
+box.PlaceholderText = text
+
+box.Font = Enum.Font.Gotham
+box.TextSize = 14
+
+box.BackgroundColor3 = Color3.fromRGB(40,40,40)
+box.TextColor3 = Color3.new(1,1,1)
+
+Instance.new("UICorner",box)
+
+return box
 
 end
 
-local music=box(0.1,"Music ID",config.music)
-local volume=box(0.3,"Volume",config.volume)
-local pitch=box(0.5,"Pitch",config.pitch)
+local music = createBox(0.2,"Music ID")
 
--- PLAY BUTTON
-local play=Instance.new("TextButton",content)
+local volume = createBox(0.4,"Volume")
 
-play.Size=UDim2.new(0.4,0,0,45)
-play.Position=UDim2.new(0.3,0,0.7,0)
+local pitch = createBox(0.6,"Pitch")
 
-play.Text="PLAY"
+-- play button
+local play = Instance.new("TextButton",content)
 
-play.Font=Enum.Font.GothamBold
+play.Size = UDim2.new(0.3,0,0,40)
+play.Position = UDim2.new(0.35,0,0.8,0)
 
-play.BackgroundColor3=Color3.fromRGB(255,20,147)
+play.Text = "Execute"
+
+play.Font = Enum.Font.GothamBold
+
+play.BackgroundColor3 = Color3.fromRGB(0,170,255)
+
+play.TextColor3 = Color3.new(1,1,1)
 
 Instance.new("UICorner",play)
 
--- PLAY FUNCTION
+-- play function
 play.MouseButton1Click:Connect(function()
 
-config.music=music.Text
-config.volume=volume.Text
-config.pitch=pitch.Text
+local asset = "rbxassetid://"..music.Text
 
-save()
+local sound = "syn"..math.random(1,9999)
 
-local asset="rbxassetid://"..music.Text
-
-local sound="luxus"..math.random(1,9999)
-
-local r=getRemote()
+local r = getRemote()
 
 r:FireServer(
 
@@ -155,19 +155,19 @@ r:FireServer(
 sound,
 game:GetService("TestService"),
 asset,
-tonumber(pitch.Text),
-tonumber(volume.Text),
+tonumber(pitch.Text) or 1,
+tonumber(volume.Text) or 1,
 true)
 
 r:FireServer("playSound",sound)
 
 end)
 
--- DRAG
+-- drag
 local drag=false
 local dragStart,startPos
 
-main.InputBegan:Connect(function(input)
+top.InputBegan:Connect(function(input)
 
 if input.UserInputType==Enum.UserInputType.MouseButton1 then
 
@@ -198,7 +198,10 @@ end
 end)
 
 UIS.InputEnded:Connect(function()
-
 drag=false
+end)
 
+-- close
+close.MouseButton1Click:Connect(function()
+gui:Destroy()
 end)
