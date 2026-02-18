@@ -1,207 +1,191 @@
---// SYNAPSE X STYLE HUB
+--// comolokko.fun Modern Hub
 
-local UIS = game:GetService("UserInputService")
-local Workspace = game:GetService("Workspace")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local loopState = true
 
-local parent = pcall(function() return gethui() end)
-and gethui() or game.CoreGui
+local parent = gethui and gethui() or game.CoreGui
 
--- remote
-local function getRemote()
+-- GUI
+local gui = Instance.new("ScreenGui", parent)
+gui.Name = "comolokko"
 
-local function find(name,p)
-local r=p:QueryDescendants(">>RemoteEvent#" .. name)
-return r[1]
-end
+-- bubble
+local bubble = Instance.new("TextButton", gui)
+bubble.Size = UDim2.new(0,60,0,60)
+bubble.Position = UDim2.new(0,20,0.5,0)
+bubble.BackgroundColor3 = Color3.fromRGB(255,0,140)
+bubble.Text = "●"
+bubble.Font = Enum.Font.GothamBold
+bubble.TextScaled = true
+bubble.Visible = false
+Instance.new("UICorner", bubble).CornerRadius = UDim.new(1,0)
 
-return find("AC6_FE_Sounds",Workspace)
-or find("AC6_FE_Sounds",ReplicatedStorage)
-
-end
-
--- gui
-local gui = Instance.new("ScreenGui",parent)
-
--- main
-local main = Instance.new("Frame",gui)
-
-main.Size = UDim2.new(0,650,0,400)
-main.Position = UDim2.new(0.5,-325,0.5,-200)
-
-main.BackgroundColor3 = Color3.fromRGB(30,30,30)
-
-Instance.new("UICorner",main)
-
--- topbar
-local top = Instance.new("Frame",main)
-
-top.Size = UDim2.new(1,0,0,40)
-
-top.BackgroundColor3 = Color3.fromRGB(20,20,20)
-
-Instance.new("UICorner",top)
+-- main frame
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0,430,0,270)
+main.Position = UDim2.new(0.5,-215,0.5,-135)
+main.BackgroundColor3 = Color3.fromRGB(25,25,25)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,8)
 
 -- title
-local title = Instance.new("TextLabel",top)
-
-title.Text = "Synapse X"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-
-title.TextColor3 = Color3.fromRGB(0,170,255)
-
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1,0,0,40)
 title.BackgroundTransparency = 1
-title.Position = UDim2.new(0,10,0,0)
-title.Size = UDim2.new(0,200,1,0)
+title.Text = "comolokko.fun"
+title.Font = Enum.Font.GothamBold
+title.TextColor3 = Color3.fromRGB(255,0,140)
+title.TextSize = 20
+
+-- minimize
+local mini = Instance.new("TextButton", main)
+mini.Size = UDim2.new(0,30,0,30)
+mini.Position = UDim2.new(1,-70,0,5)
+mini.Text = "-"
+mini.Font = Enum.Font.GothamBold
+mini.BackgroundColor3 = Color3.fromRGB(40,40,40)
+mini.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", mini)
 
 -- close
-local close = Instance.new("TextButton",top)
-
+local close = Instance.new("TextButton", main)
+close.Size = UDim2.new(0,30,0,30)
+close.Position = UDim2.new(1,-35,0,5)
 close.Text = "X"
 close.Font = Enum.Font.GothamBold
+close.BackgroundColor3 = Color3.fromRGB(40,40,40)
+close.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", close)
 
-close.Size = UDim2.new(0,40,1,0)
-close.Position = UDim2.new(1,-40,0,0)
+-- function textbox
+local function box(name, posY)
 
-close.BackgroundTransparency = 1
-close.TextColor3 = Color3.fromRGB(255,80,80)
+local b = Instance.new("TextBox", main)
+b.Size = UDim2.new(0.8,0,0,35)
+b.Position = UDim2.new(0.1,0,posY,0)
+b.PlaceholderText = name
+b.Font = Enum.Font.Gotham
+b.TextColor3 = Color3.new(1,1,1)
+b.BackgroundColor3 = Color3.fromRGB(35,35,35)
+Instance.new("UICorner", b)
 
--- sidebar
-local side = Instance.new("Frame",main)
-
-side.Size = UDim2.new(0,150,1,-40)
-side.Position = UDim2.new(0,0,0,40)
-
-side.BackgroundColor3 = Color3.fromRGB(25,25,25)
-
--- tab button
-local musicTab = Instance.new("TextButton",side)
-
-musicTab.Size = UDim2.new(1,0,0,40)
-
-musicTab.Text = "Music"
-
-musicTab.Font = Enum.Font.GothamBold
-musicTab.TextSize = 16
-
-musicTab.BackgroundTransparency = 1
-musicTab.TextColor3 = Color3.fromRGB(0,170,255)
-
--- content
-local content = Instance.new("Frame",main)
-
-content.Size = UDim2.new(1,-150,1,-40)
-content.Position = UDim2.new(0,150,0,40)
-
-content.BackgroundTransparency = 1
-
--- textbox function
-local function createBox(y,text)
-
-local box = Instance.new("TextBox",content)
-
-box.Size = UDim2.new(0.5,0,0,40)
-box.Position = UDim2.new(0.25,0,y,0)
-
-box.PlaceholderText = text
-
-box.Font = Enum.Font.Gotham
-box.TextSize = 14
-
-box.BackgroundColor3 = Color3.fromRGB(40,40,40)
-box.TextColor3 = Color3.new(1,1,1)
-
-Instance.new("UICorner",box)
-
-return box
+return b
 
 end
 
-local music = createBox(0.2,"Music ID")
+local music = box("Music ID",0.2)
+local volume = box("Volume",0.4)
+local pitch = box("Pitch",0.6)
 
-local volume = createBox(0.4,"Volume")
+-- loop
+local loopBtn = Instance.new("TextButton", main)
+loopBtn.Size = UDim2.new(0.8,0,0,30)
+loopBtn.Position = UDim2.new(0.1,0,0.75,0)
+loopBtn.Text = "Loop : ON"
+loopBtn.Font = Enum.Font.GothamBold
+loopBtn.BackgroundColor3 = Color3.fromRGB(255,0,140)
+loopBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", loopBtn)
 
-local pitch = createBox(0.6,"Pitch")
+loopBtn.MouseButton1Click:Connect(function()
+
+loopState = not loopState
+
+loopBtn.Text =
+loopState and "Loop : ON" or "Loop : OFF"
+
+end)
 
 -- play button
-local play = Instance.new("TextButton",content)
-
-play.Size = UDim2.new(0.3,0,0,40)
-play.Position = UDim2.new(0.35,0,0.8,0)
-
-play.Text = "Execute"
-
+local play = Instance.new("TextButton", main)
+play.Size = UDim2.new(0.8,0,0,35)
+play.Position = UDim2.new(0.1,0,0.87,0)
+play.Text = "PLAY"
 play.Font = Enum.Font.GothamBold
-
-play.BackgroundColor3 = Color3.fromRGB(0,170,255)
-
+play.BackgroundColor3 = Color3.fromRGB(255,0,140)
 play.TextColor3 = Color3.new(1,1,1)
-
-Instance.new("UICorner",play)
-
--- play function
-play.MouseButton1Click:Connect(function()
-
-local asset = "rbxassetid://"..music.Text
-
-local sound = "syn"..math.random(1,9999)
-
-local r = getRemote()
-
-r:FireServer(
-
-"newSound",
-sound,
-game:GetService("TestService"),
-asset,
-tonumber(pitch.Text) or 1,
-tonumber(volume.Text) or 1,
-true)
-
-r:FireServer("playSound",sound)
-
-end)
+Instance.new("UICorner", play)
 
 -- drag
-local drag=false
-local dragStart,startPos
+local dragging, dragStart, startPos
 
-top.InputBegan:Connect(function(input)
+main.InputBegan:Connect(function(input)
 
-if input.UserInputType==Enum.UserInputType.MouseButton1 then
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
 
-drag=true
-dragStart=input.Position
-startPos=main.Position
+dragging = true
+dragStart = input.Position
+startPos = main.Position
 
 end
 
 end)
 
-UIS.InputChanged:Connect(function(input)
+game:GetService("UserInputService").InputChanged:Connect(function(input)
 
-if drag then
+if dragging then
 
-local delta=input.Position-dragStart
+local delta = input.Position - dragStart
 
-main.Position=UDim2.new(
-
+main.Position =
+UDim2.new(
 startPos.X.Scale,
-startPos.X.Offset+delta.X,
-
+startPos.X.Offset + delta.X,
 startPos.Y.Scale,
-startPos.Y.Offset+delta.Y)
+startPos.Y.Offset + delta.Y
+)
 
 end
 
 end)
 
-UIS.InputEnded:Connect(function()
-drag=false
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+
+if input.UserInputType ==
+Enum.UserInputType.MouseButton1 then
+
+dragging = false
+
+end
+
 end)
 
--- close
+-- buttons
+mini.MouseButton1Click:Connect(function()
+
+main.Visible = false
+bubble.Visible = true
+
+end)
+
+bubble.MouseButton1Click:Connect(function()
+
+main.Visible = true
+bubble.Visible = false
+
+end)
+
 close.MouseButton1Click:Connect(function()
+
 gui:Destroy()
+
+end)
+
+-- play logic
+play.MouseButton1Click:Connect(function()
+
+local remote =
+game:GetService("Workspace"):
+FindFirstChild("AC6_FE_Sounds", true)
+
+if remote then
+
+remote:FireServer(
+"PlaySong",
+music.Text,
+volume.Text or "1",
+pitch.Text or "1",
+loopState
+)
+
+end
+
 end)
