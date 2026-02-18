@@ -1,0 +1,233 @@
+--// LUXUSWQ AC6 PLAYER FULL
+
+local loopState = true
+
+-- notification
+local NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/Roblox-HttpSpy/AC6-Music-Exploit/refs/heads/main/notif.luau"))()
+
+-- services
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Lighting = game:GetService("Lighting")
+
+local InjectTo = game:GetService("TestService")
+
+-- remote finder
+local function findRemoteEvent(name, parent)
+local results = parent:QueryDescendants(">>RemoteEvent#" .. name)
+return results[1]
+end
+
+local function getRemoteEvent()
+return findRemoteEvent("AC6_FE_Sounds", Workspace)
+or findRemoteEvent("AC6_FE_Sounds", ReplicatedStorage)
+end
+
+-- hide gui
+local function HideAc6Gui()
+local success, result = pcall(function()
+return gethui()
+end)
+
+return success and result or game.CoreGui
+end
+
+local HiddenGui = HideAc6Gui()
+
+-- random name
+local chars = "abcdefghijklmnopqrstuvwxyz"
+
+local function randomString()
+
+local s = ""
+
+for i = 1, math.random(6,10) do
+
+s = s .. chars:sub(math.random(1,#chars), math.random(1,#chars))
+
+end
+
+return s
+
+end
+
+-- blur
+local blur = Instance.new("BlurEffect", Lighting)
+blur.Size = 15
+
+-- gui
+local gui = Instance.new("ScreenGui", HiddenGui)
+gui.Name = randomString()
+gui.ResetOnSpawn = false
+
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0,420,0,260)
+main.Position = UDim2.new(0.5,-210,0.5,-130)
+main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+
+Instance.new("UICorner", main)
+
+-- stroke
+local stroke = Instance.new("UIStroke", main)
+stroke.Thickness = 2
+
+local grad = Instance.new("UIGradient", stroke)
+
+grad.Color = ColorSequence.new{
+
+ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,255)),
+
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0,255,255)),
+
+ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,255))
+
+}
+
+task.spawn(function()
+
+while true do
+
+grad.Rotation += 1
+
+task.wait()
+
+end
+
+end)
+
+-- title
+local title = Instance.new("TextLabel", main)
+
+title.Size = UDim2.new(1,0,0,50)
+
+title.BackgroundTransparency = 1
+
+title.Text = "LUXUSWQ AC6 PLAYER"
+
+title.Font = Enum.Font.GothamBold
+
+title.TextSize = 26
+
+title.TextColor3 = Color3.new(1,1,1)
+
+-- music id
+local textBox = Instance.new("TextBox", main)
+
+textBox.Size = UDim2.new(0.85,0,0,40)
+
+textBox.Position = UDim2.new(0.075,0,0.28,0)
+
+textBox.BackgroundColor3 = Color3.fromRGB(25,25,25)
+
+textBox.PlaceholderText = "Music ID"
+
+textBox.TextColor3 = Color3.new(1,1,1)
+
+Instance.new("UICorner", textBox)
+
+-- volume
+local volumeBox = textBox:Clone()
+
+volumeBox.Parent = main
+
+volumeBox.Position = UDim2.new(0.075,0,0.5,0)
+
+volumeBox.Size = UDim2.new(0.4,0,0,35)
+
+volumeBox.PlaceholderText = "Volume"
+
+-- pitch
+local pitchBox = volumeBox:Clone()
+
+pitchBox.Parent = main
+
+pitchBox.Position = UDim2.new(0.525,0,0.5,0)
+
+pitchBox.PlaceholderText = "Pitch"
+
+-- play button
+local play = Instance.new("TextButton", main)
+
+play.Size = UDim2.new(0.5,0,0,45)
+
+play.Position = UDim2.new(0.25,0,0.75,0)
+
+play.Text = "PLAY"
+
+play.BackgroundColor3 = Color3.fromRGB(35,35,35)
+
+play.TextColor3 = Color3.new(1,1,1)
+
+play.Font = Enum.Font.GothamBold
+
+play.TextSize = 20
+
+Instance.new("UICorner", play)
+
+local stroke2 = Instance.new("UIStroke", play)
+
+stroke2.Color = Color3.fromRGB(255,0,255)
+
+-- hover
+play.MouseEnter:Connect(function()
+
+play.BackgroundColor3 = Color3.fromRGB(55,0,55)
+
+end)
+
+play.MouseLeave:Connect(function()
+
+play.BackgroundColor3 = Color3.fromRGB(35,35,35)
+
+end)
+
+-- play function
+local soundName = randomString()
+
+play.MouseButton1Click:Connect(function()
+
+local id = textBox.Text
+
+local volume = tonumber(volumeBox.Text) or 1
+
+local pitch = tonumber(pitchBox.Text) or 1
+
+local asset = id:find("rbxassetid://") and id or "rbxassetid://"..id
+
+pcall(function()
+
+local remote = getRemoteEvent()
+
+remote:FireServer(
+
+"newSound",
+
+soundName,
+
+InjectTo,
+
+asset,
+
+pitch,
+
+volume,
+
+loopState
+
+)
+
+remote:FireServer("playSound", soundName)
+
+NotificationLibrary:SendNotification(
+
+"LUXUSWQ",
+
+"Played Successfully",
+
+3
+
+)
+
+end)
+
+end)
