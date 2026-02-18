@@ -1,4 +1,4 @@
---// LUXUSWQ PINK HUB FULL FIXED
+--// LUXUSWQ MODERN PINK HUB
 
 local loopState = true
 
@@ -6,202 +6,243 @@ local NotificationLibrary =
 loadstring(game:HttpGet(
 "https://raw.githubusercontent.com/Roblox-HttpSpy/AC6-Music-Exploit/refs/heads/main/notif.luau"))()
 
+local UIS = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 
 local InjectTo = game:GetService("TestService")
 
--- GUI PARENT
-local parent =
-pcall(function() return gethui() end)
-and gethui()
-or game.CoreGui
+local parent = pcall(function() return gethui() end)
+and gethui() or game.CoreGui
 
--- FIND REMOTE
-local function find(name,parent)
-local r = parent:QueryDescendants(">>RemoteEvent#" .. name)
+-- remote
+local function getRemote()
+local function find(name,p)
+local r=p:QueryDescendants(">>RemoteEvent#" .. name)
 return r[1]
 end
-
-local function remote()
 return find("AC6_FE_Sounds",Workspace)
 or find("AC6_FE_Sounds",ReplicatedStorage)
 end
 
--- RANDOM
+-- random
 local function rand()
-return tostring(math.random(10000,99999))
+return tostring(math.random(100000,999999))
 end
 
 -- GUI
 local gui = Instance.new("ScreenGui",parent)
+gui.ResetOnSpawn=false
 
--- BUBBLE
+-- bubble
 local bubble = Instance.new("TextButton",gui)
+bubble.Size=UDim2.new(0,60,0,60)
+bubble.Position=UDim2.new(0,20,0.5,0)
+bubble.Text="L"
+bubble.Visible=false
 
-bubble.Size = UDim2.new(0,70,0,70)
-bubble.Position = UDim2.new(0,20,0.5,0)
+bubble.Font=Enum.Font.GothamBold
+bubble.TextSize=28
+bubble.TextColor3=Color3.new(1,1,1)
 
-bubble.BackgroundColor3 = Color3.fromRGB(255,0,150)
+bubble.BackgroundColor3=Color3.fromRGB(255,105,180)
 
-bubble.Text = "OPEN"
+Instance.new("UICorner",bubble).CornerRadius=UDim.new(1,0)
 
-bubble.Visible = false
+-- main
+local main=Instance.new("Frame",gui)
+main.Size=UDim2.new(0,420,0,320)
+main.Position=UDim2.new(0.5,-210,0.5,-160)
 
-Instance.new("UICorner",bubble)
+main.BackgroundColor3=Color3.fromRGB(255,182,193)
 
--- MAIN FRAME
-local main = Instance.new("Frame",gui)
+Instance.new("UICorner",main).CornerRadius=UDim.new(0,12)
 
-main.Size = UDim2.new(0,420,0,260)
-main.Position = UDim2.new(0.5,-210,0.5,-130)
+-- shadow
+local stroke=Instance.new("UIStroke",main)
+stroke.Color=Color3.fromRGB(255,105,180)
+stroke.Thickness=2
 
--- 💎 NET PEMBE
-main.BackgroundColor3 = Color3.fromRGB(255,20,147)
+-- title
+local title=Instance.new("TextLabel",main)
+title.Size=UDim2.new(1,0,0,50)
+title.BackgroundTransparency=1
 
-Instance.new("UICorner",main)
+title.Text="LUXUSWQ HUB"
 
--- TITLE
-local title = Instance.new("TextLabel",main)
+title.Font=Enum.Font.GothamBold
+title.TextSize=28
 
-title.Size = UDim2.new(1,0,0,40)
-title.BackgroundTransparency = 1
-title.Text = "LUXUSWQ"
-title.TextScaled = true
+title.TextColor3=Color3.fromRGB(40,40,40)
 
--- MINIMIZE
-local mini = Instance.new("TextButton",main)
+-- minimize
+local mini=Instance.new("TextButton",main)
+mini.Size=UDim2.new(0,30,0,30)
+mini.Position=UDim2.new(1,-70,0,10)
 
-mini.Size = UDim2.new(0,30,0,30)
-mini.Position = UDim2.new(1,-70,0,5)
+mini.Text="-"
+mini.Font=Enum.Font.GothamBold
+mini.TextSize=18
 
-mini.Text = "-"
+-- close
+local close=Instance.new("TextButton",main)
+close.Size=UDim2.new(0,30,0,30)
+close.Position=UDim2.new(1,-35,0,10)
 
--- CLOSE
-local close = Instance.new("TextButton",main)
+close.Text="X"
+close.Font=Enum.Font.GothamBold
 
-close.Size = UDim2.new(0,30,0,30)
-close.Position = UDim2.new(1,-35,0,5)
+-- textbox function
+local function createBox(y,text)
 
-close.Text = "X"
+local box=Instance.new("TextBox",main)
 
--- MUSIC BOX
-local music = Instance.new("TextBox",main)
+box.Size=UDim2.new(0.8,0,0,40)
+box.Position=UDim2.new(0.1,0,y,0)
 
-music.Size = UDim2.new(0.8,0,0,40)
-music.Position = UDim2.new(0.1,0,0.3,0)
+box.PlaceholderText=text
 
-music.PlaceholderText = "Music ID"
+box.Font=Enum.Font.Gotham
+box.TextSize=16
 
--- PLAY
-local play = Instance.new("TextButton",main)
+box.BackgroundColor3=Color3.fromRGB(255,240,245)
 
-play.Size = UDim2.new(0.4,0,0,40)
-play.Position = UDim2.new(0.3,0,0.7,0)
+Instance.new("UICorner",box)
 
-play.Text = "PLAY"
+return box
 
--- MINIMIZE FUNCTION
-mini.MouseButton1Click:Connect(function()
+end
 
-main.Visible = false
-bubble.Visible = true
+local music=createBox(0.2,"Music ID")
+local volume=createBox(0.38,"Volume")
+local pitch=createBox(0.56,"Pitch")
+
+-- loop button
+local loopBtn=Instance.new("TextButton",main)
+
+loopBtn.Size=UDim2.new(0.8,0,0,35)
+loopBtn.Position=UDim2.new(0.1,0,0.72,0)
+
+loopBtn.Text="Loop : ON"
+
+loopBtn.Font=Enum.Font.GothamBold
+loopBtn.TextSize=16
+
+loopBtn.BackgroundColor3=Color3.fromRGB(255,105,180)
+loopBtn.TextColor3=Color3.new(1,1,1)
+
+Instance.new("UICorner",loopBtn)
+
+loopBtn.MouseButton1Click:Connect(function()
+
+loopState=not loopState
+
+loopBtn.Text="Loop : "..(loopState and "ON" or "OFF")
 
 end)
 
--- OPEN
-bubble.MouseButton1Click:Connect(function()
+-- play button
+local play=Instance.new("TextButton",main)
 
-main.Visible = true
-bubble.Visible = false
+play.Size=UDim2.new(0.5,0,0,45)
+play.Position=UDim2.new(0.25,0,0.85,0)
 
-end)
+play.Text="PLAY"
 
--- CLOSE
-close.MouseButton1Click:Connect(function()
+play.Font=Enum.Font.GothamBold
+play.TextSize=18
 
-gui:Destroy()
+play.BackgroundColor3=Color3.fromRGB(255,20,147)
+play.TextColor3=Color3.new(1,1,1)
 
-end)
+Instance.new("UICorner",play)
 
-
-
-local dragging = false
-local dragStart
-local startPos
+-- drag
+local drag=false
+local dragStart,startPos
 
 main.InputBegan:Connect(function(input)
 
-if input.UserInputType == Enum.UserInputType.MouseButton1 then
+if input.UserInputType==Enum.UserInputType.MouseButton1 then
 
-dragging = true
-
-dragStart = input.Position
-
-startPos = main.Position
+drag=true
+dragStart=input.Position
+startPos=main.Position
 
 end
 
 end)
 
-UserInputService.InputChanged:Connect(function(input)
+UIS.InputChanged:Connect(function(input)
 
-if dragging then
+if drag then
 
-local delta = input.Position - dragStart
+local delta=input.Position-dragStart
 
-main.Position = UDim2.new(
+main.Position=UDim2.new(
 
 startPos.X.Scale,
-startPos.X.Offset + delta.X,
-
+startPos.X.Offset+delta.X,
 startPos.Y.Scale,
-startPos.Y.Offset + delta.Y
-
-)
+startPos.Y.Offset+delta.Y)
 
 end
 
 end)
 
-UserInputService.InputEnded:Connect(function()
+UIS.InputEnded:Connect(function()
+drag=false
+end)
 
-dragging = false
+-- minimize
+mini.MouseButton1Click:Connect(function()
+
+main.Visible=false
+bubble.Visible=true
 
 end)
 
--- PLAY SYSTEM
+bubble.MouseButton1Click:Connect(function()
 
-local sound = rand()
+main.Visible=true
+bubble.Visible=false
+
+end)
+
+-- close
+close.MouseButton1Click:Connect(function()
+gui:Destroy()
+end)
+
+-- play
+local sound=rand()
 
 play.MouseButton1Click:Connect(function()
 
-local id = music.Text
+local id=music.Text
+local vol=tonumber(volume.Text) or 1
+local pit=tonumber(pitch.Text) or 1
 
-local asset = "rbxassetid://" .. id
+local asset="rbxassetid://"..id
 
 pcall(function()
 
-local r = remote()
+local r=getRemote()
 
 r:FireServer(
-
 "newSound",
 sound,
 InjectTo,
 asset,
-1,
-1,
-true
-
-)
+pit,
+vol,
+loopState)
 
 r:FireServer("playSound",sound)
 
 NotificationLibrary:SendNotification(
-"SİKİŞİSTAN",
-"PLAYING",
+"LUXUSWQ",
+"Playing",
 3)
 
 end)
